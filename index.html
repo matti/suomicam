@@ -9,7 +9,7 @@
   }
 
   img {
-    width: 25%;
+    width: 33%;
   }
 </style>
 
@@ -48,10 +48,14 @@
             return
           }
           feature.properties.presets.forEach(preset => {
-            console.log(preset)
+            let a = document.createElement("a")
+            a.href = preset.imageUrl
+
             let img = document.createElement("img")
             img.src = preset.imageUrl
-            images.appendChild(img)
+
+            a.appendChild(img)
+            images.appendChild(a)
           })
         })
       )
