@@ -47,8 +47,8 @@
           if (feature.properties.municipality.toLowerCase() != betterMunicipality) {
             return
           }
-          console.log(feature)
           feature.properties.presets.forEach(preset => {
+            console.log(preset)
             let img = document.createElement("img")
             img.src = preset.imageUrl
             images.appendChild(img)
