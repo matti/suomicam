@@ -1,0 +1,66 @@
+<style>
+  body {
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  input {
+    font-size: large;
+  }
+
+  img {
+    width: 25%;
+  }
+</style>
+
+<form id="form">
+  <label>Municipality: </label><input id="municipality" value="Helsinki">
+</form>
+
+<div id="images"></div>
+
+<script>
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+  form.onsubmit = (e) => {
+    e.preventDefault()
+    update(municipality.value)
+  }
+  municipality.onblur = (e) => {
+    e.preventDefault()
+    update(municipality.value)
+  }
+
+  let update = (municipality) => {
+    var queryParams = new URLSearchParams(window.location.search);
+    queryParams.set("municipality", municipality);
+    history.replaceState(null, null, "?" + queryParams.toString());
+
+    let betterMunicipality = municipality.toLowerCase()
+
+    images.textContent = ''
+    fetch("https://tie.digitraffic.fi/api/v3/metadata/camera-stations")
+      .then(response => response.json())
+      .then(data =>
+        data.features.forEach(feature => {
+          if (feature.properties.municipality.toLowerCase() != betterMunicipality) {
+            return
+          }
+          console.log(feature)
+          feature.properties.presets.forEach(preset => {
+            let img = document.createElement("img")
+            img.src = preset.imageUrl
+            images.appendChild(img)
+          })
+        })
+      )
+  }
+
+  if (params.municipality) {
+    municipality.value = params.municipality
+  } else {
+    municipality.value = "Helsinki"
+  }
+  update(municipality.value)
+</script>
