@@ -41,19 +41,27 @@
     let betterMunicipality = municipality.toLowerCase()
 
     images.textContent = ''
-    fetch("https://tie.digitraffic.fi/api/v3/metadata/camera-stations")
+    fetch("https://tie.digitraffic.fi/api/weathercam/v1/stations")
       .then(response => response.json())
       .then(data =>
         data.features.forEach(feature => {
-          if (feature.properties.municipality.toLowerCase() != betterMunicipality) {
+          let municipality = feature.properties.name.toLowerCase();
+
+          if (!municipality.includes(betterMunicipality)) {
             return
           }
+          console.log(feature.properties)
+
+
+
           feature.properties.presets.forEach(preset => {
+            let imgUrl = `https://weathercam.digitraffic.fi/${preset.id}.jpg`;
+
             let a = document.createElement("a")
-            a.href = preset.imageUrl
+            a.href = imgUrl
 
             let img = document.createElement("img")
-            img.src = preset.imageUrl
+            img.src = imgUrl
 
             a.appendChild(img)
             images.appendChild(a)
